@@ -1,103 +1,205 @@
+"use client";
+
+import { useState, useEffect } from 'react';
 import Image from "next/image";
+import { Montserrat } from 'next/font/google';
+import CALL_OF_DUTY_MOBILE from "@/public/call_of_duty_mobile.jpg";
+import CLASH_OF_CLANS from "@/public/clash_of_clans.jpg";
+import DOTA_2 from "@/public/dota_2.jpg";
+import ROCKET_LEAGUE from "@/public/rocket_league.jpg";
+import VALORANT from "@/public/valorant.jpg";
+import FORTNITE from "@/public/fortnite.jpg";
+import APEX_LEGENDS from "@/public/apex_legends.jpg";
+
+// Configuración de la fuente Montserrat
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-montserrat',
+});
+
+const images = [
+  { src: CALL_OF_DUTY_MOBILE, alt: "Call of Duty Mobile" },
+  { src: CLASH_OF_CLANS, alt: "Clash of Clans" },
+  { src: DOTA_2, alt: "Dota 2" },
+  { src: ROCKET_LEAGUE, alt: "Rocket League" },
+  { src: VALORANT, alt: "Valorant" },
+  { src: FORTNITE, alt: "Fortnite" },
+  { src: APEX_LEGENDS, alt: "Apex Legends" }
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [fadeState, setFadeState] = useState("fadeIn");
+  const [isMobile, setIsMobile] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFadeState("fadeOut");
+      setTimeout(() => {
+        setCurrentImageIndex((prevIndex) => 
+          prevIndex === images.length - 1 ? 0 : prevIndex + 1
+        );
+        setFadeState("fadeIn");
+      }, 500);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [currentImageIndex]);
+
+  const nextImage = () => {
+    setFadeState("fadeOut");
+    setTimeout(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+      setFadeState("fadeIn");
+    }, 500);
+  };
+
+  const prevImage = () => {
+    setFadeState("fadeOut");
+    setTimeout(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      );
+      setFadeState("fadeIn");
+    }, 500);
+  };
+
+  const goToImage = (index: number) => {
+    setFadeState("fadeOut");
+    setTimeout(() => {
+      setCurrentImageIndex(index);
+      setFadeState("fadeIn");
+    }, 500);
+  };
+
+  return (
+    <div className="relative h-screen w-full overflow-hidden font-sans">
+      
+      {/* Enhanced Header - Manteniendo estilos originales pero responsive */}
+      <header className="absolute top-6 left-6 right-6 z-20">
+        <div className="mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
+          <div style={{"padding":"16px"}} className={`${montserrat.className} flex justify-center items-center text-center h-fit w-fit bg-gradient-to-r from-black/70 to-black/50 backdrop-blur-md rounded-xl shadow-lg md:w-auto`}>
+            <h1 className="text-white font-bold text-xl md:text-2xl bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text">
+              NEXUS-WARS. La plataforma de torneos de videojuegos
+            </h1>
+          </div>
+          
+          <div className="flex gap-4 space-x-2 md:space-x-4 w-full md:w-auto justify-center">
+            <button style={{"padding":"16px"}} className={`${montserrat.className} bg-gradient-to-br from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-semibold rounded-xl px-6 py-2.5 text-sm md:text-base transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 flex items-center gap-2 flex-1 md:flex-none justify-center`}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+              Iniciar sesión
+            </button>
+            <button style={{"padding":"16px"}} className={`${montserrat.className} bg-gradient-to-br from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 text-white font-semibold rounded-xl px-6 py-2.5 text-sm md:text-base transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 flex items-center gap-2 flex-1 md:flex-none justify-center`}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              </svg>
+              Registrarse
+            </button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+      </header>
+
+      {/* Contenedor de imagen - Exactamente igual al original */}
+      <div className={`absolute inset-0 transition-opacity duration-500 ${fadeState === "fadeIn" ? "opacity-100" : "opacity-0"}`}>
+        <div className="absolute inset-0 w-full h-full">
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src={images[currentImageIndex].src}
+            alt={images[currentImageIndex].alt}
+            fill
+            priority
+            quality={100}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+            className="object-cover w-full h-full"
+            style={{
+              objectFit: 'cover',
+              objectPosition: 'center',
+              width: '100%',
+              height: '100%'
+            }}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        </div>
+      </div>
+
+      {/* Nombre de la imagen - Manteniendo estilos originales */}
+      <div className={`absolute ${isMobile ? 'bottom-4 left-4' : 'bottom-8 left-8'} z-10`}>
+        <div style={{"padding":"16px"}} className={`${montserrat.className} bg-black/60 backdrop-blur-md rounded-xl ${
+          isMobile ? 'p-3' : 'p-6'
+        } shadow-lg border border-white/10`}>
+          <h2 className={`text-white font-bold tracking-wide ${
+            isMobile ? 'text-2xl px-4 py-2' : 'text-6xl px-8 py-4'
+          }`}>
+            {images[currentImageIndex].alt}
+          </h2>
+        </div>
+      </div>
+
+      {/* Enhanced Navigation Controls - Manteniendo estilos originales */}
+      <button 
+        onClick={prevImage}
+        className={`absolute ${
+          isMobile ? 'left-4 p-3' : 'left-8 p-4'
+        } top-1/2 -translate-y-1/2 z-10 rounded-full bg-white/30 backdrop-blur-md hover:bg-white/40 transition-all duration-300 shadow-lg hover:shadow-xl group border border-white/20`}
+        aria-label="Imagen anterior"
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className={`${isMobile ? 'h-5 w-5' : 'h-7 w-7'} text-white group-hover:scale-110 transition-transform`}
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      
+      <button 
+        onClick={nextImage}
+        className={`absolute ${
+          isMobile ? 'right-4 p-3' : 'right-8 p-4'
+        } top-1/2 -translate-y-1/2 z-10 rounded-full bg-white/30 backdrop-blur-md hover:bg-white/40 transition-all duration-300 shadow-lg hover:shadow-xl group border border-white/20`}
+        aria-label="Siguiente imagen"
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className={`${isMobile ? 'h-5 w-5' : 'h-7 w-7'} text-white group-hover:scale-110 transition-transform`}
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
         >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      {/* Enhanced Position Indicators - Manteniendo estilos originales */}
+      <div className={`absolute ${
+        isMobile ? 'bottom-4 right-4 gap-2' : 'bottom-8 right-8 gap-3'
+      } flex justify-center z-10`}>
+        {images.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToImage(index)}
+            className={`${
+              isMobile ? 'h-2 w-2' : 'h-3 w-3'
+            } rounded-full transition-all duration-300 ${
+              currentImageIndex === index 
+                ? 'bg-white scale-125 shadow-sm' 
+                : 'bg-white/50 hover:bg-white/80'
+            }`}
+            aria-label={`Ir a imagen ${index + 1}`}
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        ))}
+      </div>
     </div>
   );
 }
