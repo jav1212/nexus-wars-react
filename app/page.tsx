@@ -11,7 +11,6 @@ import VALORANT from "@/public/valorant.jpg";
 import FORTNITE from "@/public/fortnite.jpg";
 import APEX_LEGENDS from "@/public/apex_legends.jpg";
 
-// Configuración de la fuente Montserrat
 const montserrat = Montserrat({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -84,7 +83,7 @@ export default function Home() {
   return (
     <div className="relative h-screen w-full overflow-hidden font-sans">
       
-      {/* Enhanced Header - Manteniendo estilos originales pero responsive */}
+      {/* Header */}
       <header className="absolute top-6 left-6 right-6 z-20">
         <div className="mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
           <div style={{"padding":"16px"}} className={`${montserrat.className} flex justify-center items-center text-center h-fit w-fit bg-gradient-to-r from-black/70 to-black/50 backdrop-blur-md rounded-xl shadow-lg md:w-auto`}>
@@ -110,7 +109,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Contenedor de imagen - Exactamente igual al original */}
+      {/* Contenedor de imagen */}
       <div className={`absolute inset-0 transition-opacity duration-500 ${fadeState === "fadeIn" ? "opacity-100" : "opacity-0"}`}>
         <div className="absolute inset-0 w-full h-full">
           <Image
@@ -131,20 +130,43 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Nombre de la imagen - Manteniendo estilos originales */}
-      <div className={`absolute ${isMobile ? 'bottom-4 left-4' : 'bottom-8 left-8'} z-10`}>
-        <div style={{"padding":"16px"}} className={`${montserrat.className} bg-black/60 backdrop-blur-md rounded-xl ${
-          isMobile ? 'p-3' : 'p-6'
-        } shadow-lg border border-white/10`}>
-          <h2 className={`text-white font-bold tracking-wide ${
-            isMobile ? 'text-2xl px-4 py-2' : 'text-6xl px-8 py-4'
+      {/* Contenedor unificado para nombre e indicadores */}
+      <div className={`absolute ${isMobile ? 'bottom-4 left-4 right-4' : 'bottom-8 left-8 right-8'} z-10`}>
+        <div className="flex flex-col md:flex-row justify-between items-end gap-4">
+          {/* Nombre del juego */}
+          <div style={{"padding":"16px"}} className={`${montserrat.className} bg-black/60 backdrop-blur-md rounded-xl ${
+            isMobile ? 'p-3' : 'p-6'
+          } shadow-lg border border-white/10`}>
+            <h2 className={`text-white font-bold tracking-wide ${
+              isMobile ? 'text-2xl px-4 py-2' : 'text-6xl px-8 py-4'
+            }`}>
+              {images[currentImageIndex].alt}
+            </h2>
+          </div>
+          
+          {/* Indicadores de posición */}
+          <div className={`flex justify-center ${
+            isMobile ? 'gap-2' : 'gap-3'
           }`}>
-            {images[currentImageIndex].alt}
-          </h2>
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToImage(index)}
+                className={`${
+                  isMobile ? 'h-2 w-2' : 'h-3 w-3'
+                } rounded-full transition-all duration-300 ${
+                  currentImageIndex === index 
+                    ? 'bg-white scale-125 shadow-sm' 
+                    : 'bg-white/50 hover:bg-white/80'
+                }`}
+                aria-label={`Ir a imagen ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Enhanced Navigation Controls - Manteniendo estilos originales */}
+      {/* Controles de navegación */}
       <button 
         onClick={prevImage}
         className={`absolute ${
@@ -180,26 +202,6 @@ export default function Home() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </button>
-
-      {/* Enhanced Position Indicators - Manteniendo estilos originales */}
-      <div className={`absolute ${
-        isMobile ? 'bottom-4 right-4 gap-2' : 'bottom-8 right-8 gap-3'
-      } flex justify-center z-10`}>
-        {images.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToImage(index)}
-            className={`${
-              isMobile ? 'h-2 w-2' : 'h-3 w-3'
-            } rounded-full transition-all duration-300 ${
-              currentImageIndex === index 
-                ? 'bg-white scale-125 shadow-sm' 
-                : 'bg-white/50 hover:bg-white/80'
-            }`}
-            aria-label={`Ir a imagen ${index + 1}`}
-          />
-        ))}
-      </div>
     </div>
   );
 }
